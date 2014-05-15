@@ -29,6 +29,7 @@
 
 @property (weak, nonatomic) IBOutlet JSQMessagesLabel *cellTopLabel;
 @property (weak, nonatomic) IBOutlet JSQMessagesLabel *messageBubbleTopLabel;
+@property (weak, nonatomic) IBOutlet JSQMessagesLabel *timeLabel;
 @property (weak, nonatomic) IBOutlet JSQMessagesLabel *cellBottomLabel;
 
 @property (weak, nonatomic) IBOutlet UITextView *textView;
@@ -102,6 +103,10 @@
     self.cellTopLabel.font = [UIFont boldSystemFontOfSize:12.0f];
     self.cellTopLabel.textColor = [UIColor lightGrayColor];
     
+    self.timeLabel.textAlignment = NSTextAlignmentCenter;
+    self.timeLabel.font = [UIFont boldSystemFontOfSize:8.0f];
+    self.timeLabel.textColor = [UIColor lightGrayColor];
+    
     self.messageBubbleTopLabel.font = [UIFont systemFontOfSize:12.0f];
     self.messageBubbleTopLabel.textColor = [UIColor lightGrayColor];
     
@@ -130,6 +135,7 @@
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(jsq_handleTapGesture:)];
     [self.avatarContainerView addGestureRecognizer:tap];
+    [self.textView addGestureRecognizer:tap];
     self.tapGestureRecognizer = tap;
 }
 
@@ -139,6 +145,7 @@
     
     _cellTopLabel = nil;
     _messageBubbleTopLabel = nil;
+    _timeLabel = nil;
     _cellBottomLabel = nil;
     _textView = nil;
     _messageBubbleImageView = nil;
@@ -159,6 +166,7 @@
     
     self.cellTopLabel.text = nil;
     self.messageBubbleTopLabel.text = nil;
+    self.timeLabel.text = nil;
     self.cellBottomLabel.text = nil;
     self.textView.text = nil;
 }
@@ -194,6 +202,7 @@
     [super setBackgroundColor:backgroundColor];
     
     self.cellTopLabel.backgroundColor = backgroundColor;
+    self.timeLabel.backgroundColor = backgroundColor;
     self.messageBubbleTopLabel.backgroundColor = backgroundColor;
     self.cellBottomLabel.backgroundColor = backgroundColor;
     
@@ -333,6 +342,8 @@
 - (void)jsq_handleTapGesture:(UITapGestureRecognizer *)tap
 {
     [self.delegate messagesCollectionViewCellDidTapAvatar:self];
+    [self.delegate messagesCollectionViewCellDidTapText:self];
+
 }
 
 #pragma mark - Notifications

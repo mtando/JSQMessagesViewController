@@ -22,11 +22,20 @@
 
 @class JSQMessagesCollectionViewCell;
 
+
 /**
  *  The `JSQMessagesCollectionViewCellDelegate` protocol defines methods that allow you to manage
  *  additional interactions within the collection view cell.
  */
 @protocol JSQMessagesCollectionViewCellDelegate <NSObject>
+
+
+/**
+ *  Tells the delegate that the textView of a cell has been tapped.
+ *
+ *  @param cell The cell that received the tap.
+ */
+- (void)messagesCollectionViewCellDidTapText:(JSQMessagesCollectionViewCell *)cell;
 
 @required
 
@@ -65,6 +74,12 @@
  *  This label is most commonly used to display the message sender.
  */
 @property (weak, nonatomic, readonly) JSQMessagesLabel *messageBubbleTopLabel;
+
+/**
+ *  Returns the label that is pinned trailing the messageBubbleImageView.
+ *  This label is most commonly used to display the message sent time.
+ */
+@property (weak, nonatomic, readonly) JSQMessagesLabel *timeLabel;
 
 /**
  *  Returns the label that is pinned to the bottom of the cell.

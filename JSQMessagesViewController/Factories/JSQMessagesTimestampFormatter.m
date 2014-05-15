@@ -106,6 +106,36 @@
     return [[NSAttributedString alloc] initWithAttributedString:timestamp];
 }
 
+- (NSAttributedString *)attributedTimeForDate:(NSDate *)date
+{
+    if (!date) {
+        return nil;
+    }
+    
+    NSString *time = [self timeForDate:date];
+    
+    NSMutableAttributedString *timestamp = [[NSMutableAttributedString alloc] initWithString:time
+                                                                                  attributes:nil];
+    
+    return [[NSAttributedString alloc] initWithAttributedString:timestamp];
+}
+
+- (NSAttributedString *)attributedDateForDate:(NSDate *)date
+{
+    if (!date) {
+        return nil;
+    }
+    
+    NSString *relativeDate = [self relativeDateForDate:date];
+    
+    NSMutableAttributedString *timestamp = [[NSMutableAttributedString alloc] initWithString:relativeDate
+                                                                                  attributes:self.dateTextAttributes];
+    
+    [timestamp appendAttributedString:[[NSAttributedString alloc] initWithString:@" "]];
+    
+    return [[NSAttributedString alloc] initWithAttributedString:timestamp];
+}
+
 - (NSString *)timeForDate:(NSDate *)date
 {
     if (!date) {

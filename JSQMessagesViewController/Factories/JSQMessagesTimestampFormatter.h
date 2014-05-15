@@ -74,6 +74,31 @@
 - (NSAttributedString *)attributedTimestampForDate:(NSDate *)date;
 
 /**
+ *  Returns an attributed string representation of the given date.
+ *  It applies the attributes in `dateTextAttributes`.
+ *
+ *  @param date The date to format.
+ *
+ *  @return A formatted, attributed string representation of date.
+ *
+ *  @see `dateTextAttributes`.
+ */
+- (NSAttributedString *)attributedDateForDate:(NSDate *)date;
+
+/**
+ *  Returns an attributed string representation of the given time.
+ *  It applies the attributes in `timeTextAttributes`.
+ *
+ *  @param date The date to format.
+ *
+ *  @return A formatted, attributed string representation of time.
+ *
+ *  @see `timeTextAttributes`.
+ */
+- (NSAttributedString *)attributedTimeForDate:(NSDate *)date;
+
+
+/**
  *  Returns a string representation of *only* the minute and hour components of the given date formatted in the current locale styled using `NSDateFormatterShortStyle`.
  *
  *  @param date The date to format.

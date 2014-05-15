@@ -113,6 +113,20 @@
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath;
 
 /**
+ *  Asks the data source for the text to display in the `timeLabel` for the specified
+ *  message data item at indexPath in the collectionView.
+ *
+ *  @param collectionView The object representing the collection view requesting this information.
+ *  @param indexPath      The index path that specifies the location of the item.
+ *
+ *  @return A configured attributed string or `nil` if you do not want text displayed for the item at indexPath.
+ *  Return an attributed string with `nil` attributes to use the default attributes.
+ *
+ *  @see `JSQMessagesCollectionViewCell`.
+ */
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTimeLabelAtIndexPath:(NSIndexPath *)indexPath;
+
+/**
  *  Asks the data source for the text to display in the `messageBubbleTopLabel` for the specified
  *  message data item at indexPath in the collectionView.
  *
@@ -206,6 +220,16 @@
  */
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView
  didTapAvatarImageView:(UIImageView *)avatarImageView
+           atIndexPath:(NSIndexPath *)indexPath;
+
+/**
+ *  Notifies the delegate that the text view at the specified indexPath did receive a tap event.
+ *
+ *  @param collectionView  The collection view object that is notifying you of the tap event.
+ *  @param textView        The text view that was tapped.
+ *  @param indexPath       The index path of the item for which the avatar was tapped.
+ */- (void)collectionView:(JSQMessagesCollectionView *)collectionView
+ didTapTextView:(UITextView *)textView
            atIndexPath:(NSIndexPath *)indexPath;
 
 /**

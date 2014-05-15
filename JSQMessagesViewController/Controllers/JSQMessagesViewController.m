@@ -341,6 +341,11 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     return nil;
 }
 
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTimeLabelAtIndexPath:(NSIndexPath *)indexPath
+{
+    return nil;
+}
+
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
     return nil;
@@ -384,6 +389,7 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     cell.messageBubbleImageView = [collectionView.dataSource collectionView:collectionView bubbleImageViewForItemAtIndexPath:indexPath];
     cell.avatarImageView = [collectionView.dataSource collectionView:collectionView avatarImageViewForItemAtIndexPath:indexPath];
     cell.cellTopLabel.attributedText = [collectionView.dataSource collectionView:collectionView attributedTextForCellTopLabelAtIndexPath:indexPath];
+    cell.timeLabel.attributedText = [collectionView.dataSource collectionView:collectionView attributedTextForCellTimeLabelAtIndexPath:indexPath];
     cell.messageBubbleTopLabel.attributedText = [collectionView.dataSource collectionView:collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:indexPath];
     cell.cellBottomLabel.attributedText = [collectionView.dataSource collectionView:collectionView attributedTextForCellBottomLabelAtIndexPath:indexPath];
     
@@ -403,12 +409,19 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     cell.backgroundColor = [UIColor clearColor];
     
     CGFloat bubbleTopLabelInset = 60.0f;
+    CGFloat timeLabelOutgoingInset = 270.0f;
+    CGFloat timeLabelIncomingInset = 130.0f;
     
-    if (isOutgoingMessage) {
+    
+    if (isOutgoingMessage)
+    {
         cell.messageBubbleTopLabel.textInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, bubbleTopLabelInset);
+        cell.timeLabel.textInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, timeLabelOutgoingInset);
     }
-    else {
+    else
+    {
         cell.messageBubbleTopLabel.textInsets = UIEdgeInsetsMake(0.0f, bubbleTopLabelInset, 0.0f, 0.0f);
+        cell.timeLabel.textInsets = UIEdgeInsetsMake(0.0f, timeLabelIncomingInset, 0.0f, 0.0f);
     }
     
     cell.textView.dataDetectorTypes = UIDataDetectorTypeAll;
@@ -497,12 +510,46 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
  didTapAvatarImageView:(UIImageView *)avatarImageView
            atIndexPath:(NSIndexPath *)indexPath { }
 
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView
+ didTapTextView:(UITextView *)textView
+           atIndexPath:(NSIndexPath *)indexPath
+{
+    id<JSQMessageData> messageData = [collectionView.dataSource collectionView:collectionView messageDataForItemAtIndexPath:indexPath];
+    NSAssert(messageData, @"ERROR: messageData must not be nil: %s", __PRETTY_FUNCTION__);
+    
+    NSString *messageSender = [messageData sender];
+    NSAssert(messageSender, @"ERROR: messageData sender must not be nil: %s", __PRETTY_FUNCTION__);
+    BOOL isOutgoingMessage = [messageSender isEqualToString:self.sender];
+
+    NSString *cellIdentifier = isOutgoingMessage ? self.outgoingCellIdentifier : self.incomingCellIdentifier;
+    JSQMessagesCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+    
+    // TODO: timeLabel toggling not functional yet..
+    if([cell.timeLabel isHidden])
+    {
+        [cell.timeLabel setHidden: NO];
+        [cell setNeedsDisplay];
+    }
+    else
+    {
+        cell.timeLabel.hidden = YES;
+        [cell setNeedsDisplay];
+    }
+}
+
 #pragma mark - Messages collection view cell delegate
 
 - (void)messagesCollectionViewCellDidTapAvatar:(JSQMessagesCollectionViewCell *)cell
 {
     [self.collectionView.delegate collectionView:self.collectionView
                            didTapAvatarImageView:cell.avatarImageView
+                                     atIndexPath:[self.collectionView indexPathForCell:cell]];
+}
+
+- (void)messagesCollectionViewCellDidTapText:(JSQMessagesCollectionViewCell *)cell
+{
+    [self.collectionView.delegate collectionView:self.collectionView
+                           didTapTextView:cell.textView
                                      atIndexPath:[self.collectionView indexPathForCell:cell]];
 }
 
